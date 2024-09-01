@@ -86,29 +86,36 @@ const Goals = () => {
   const dispatch = useDispatch();
 
   const goalState = useSelector((state) => state.goals);
-  const { goalsList } = goalState;
+  const { goalsList, loading, error } = goalState;
   useEffect(() => {
     dispatch(getGoals());
   }, [dispatch]);
   return (
     <GoalsContainer>
-      <GoalsHeader>
-        <TitleSection>goals</TitleSection>
-        <AddGoalButton>
-          <img src="images/add.png" alt="add-goal-btn" />
-          add a goal
-        </AddGoalButton>
-      </GoalsHeader>
-      {goalsList &&
-        goalsList.map((goal, indx) => (
-          <GoalRow key={`goal-number-` + indx}>
-            <Name>{goal.name}</Name>
-            <Action>
-              <img src="./images/edit.png" alt="edit-goal-btn" />
-              <img src="./images/delete.png" alt="delete-goal-btn" />
-            </Action>
-          </GoalRow>
-        ))}
+      {error && <div>Error fetching goals</div>}
+      {loading === "pending" ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <GoalsHeader>
+            <TitleSection>goals</TitleSection>
+            <AddGoalButton>
+              <img src="images/add.png" alt="add-goal-btn" />
+              add a goal
+            </AddGoalButton>
+          </GoalsHeader>
+          {goalsList &&
+            goalsList.map((goal, indx) => (
+              <GoalRow key={`goal-number-` + indx}>
+                <Name>{goal.name}</Name>
+                <Action>
+                  <img src="./images/edit.png" alt="edit-goal-btn" />
+                  <img src="./images/delete.png" alt="delete-goal-btn" />
+                </Action>
+              </GoalRow>
+            ))}
+        </>
+      )}
     </GoalsContainer>
   );
 };
