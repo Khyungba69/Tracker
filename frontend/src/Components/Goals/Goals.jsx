@@ -6,28 +6,41 @@ import { getGoals } from "./GoalsSlice";
 const GoalsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
+  padding: 20px;
+  background-color: #f0f4f8;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 `;
+
 const GoalsHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
   align-items: center;
+  margin-bottom: 20px;
 `;
+
 const TitleSection = styled.div`
   text-transform: uppercase;
-  letter-spacing: 6px;
-  font-size: 28px;
-  background-color: #fffffe;
-  color: #094067;
+  letter-spacing: 4px;
+  font-size: 24px;
+  background-color: #094067;
+  color: #fffffe;
   font-weight: 700;
-  border-radius: 5px;
   padding: 8px 16px;
+  border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+    font-size: 20px;
+    padding: 6px 12px;
+  }
 `;
+
 const AddGoalButton = styled.div`
-  background-color: #fffffe;
-  color: #094067;
+  background-color: #094067;
+  color: #fffffe;
   padding: 8px 16px;
   border-radius: 5px;
   text-transform: uppercase;
@@ -35,14 +48,26 @@ const AddGoalButton = styled.div`
   align-items: center;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   img {
     max-width: 20px;
-    margin: 8px;
+    margin-right: 8px;
   }
-  :hover {
+
+  &:hover {
     background-color: #0b609a;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 14px;
+
+    img {
+      max-width: 16px;
+    }
   }
 `;
 
@@ -51,45 +76,62 @@ const GoalRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 12px 0;
-  color: #5f6c7b;
   background-color: #fffffe;
   padding: 12px 16px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 
-  :last-child {
-    margin-bottom: 0;
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 12px;
   }
 `;
+
 const Name = styled.div`
   text-transform: capitalize;
   font-weight: 600;
   color: #094067;
+  font-size: 18px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
+
 const Action = styled.div`
   display: flex;
   align-items: center;
 
   img {
     max-width: 20px;
-    margin-left: 8px;
+    margin-left: 12px;
     cursor: pointer;
     transition: transform 0.3s ease;
 
-    :hover {
+    &:hover {
       transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      max-width: 16px;
+      margin-left: 8px;
     }
   }
 `;
 
 const Goals = () => {
   const dispatch = useDispatch();
-
   const goalState = useSelector((state) => state.goals);
   const { goalsList, loading, error } = goalState;
+
   useEffect(() => {
     dispatch(getGoals());
   }, [dispatch]);
+
   return (
     <GoalsContainer>
       {error && <div>Error fetching goals</div>}
@@ -98,19 +140,19 @@ const Goals = () => {
       ) : (
         <>
           <GoalsHeader>
-            <TitleSection>goals</TitleSection>
+            <TitleSection>Goals</TitleSection>
             <AddGoalButton>
-              <img src="images/add.png" alt="add-goal-btn" />
-              add a goal
+              <img src="images/add.png" alt="Add Goal" />
+              Add a Goal
             </AddGoalButton>
           </GoalsHeader>
           {goalsList &&
             goalsList.map((goal, indx) => (
-              <GoalRow key={`goal-number-` + indx}>
+              <GoalRow key={`goal-number-${indx}`}>
                 <Name>{goal.name}</Name>
                 <Action>
-                  <img src="./images/edit.png" alt="edit-goal-btn" />
-                  <img src="./images/delete.png" alt="delete-goal-btn" />
+                  <img src="images/edit.png" alt="Edit Goal" />
+                  <img src="images/delete.png" alt="Delete Goal" />
                 </Action>
               </GoalRow>
             ))}

@@ -7,7 +7,15 @@ const DesktopContainer = styled.div`
     display: none;
   }
 `;
-const MobileConatainer = styled.div`
+
+const MobileContainer = styled.div`
+  background-color: #d8eefe;
+  padding: 20px;
+  text-align: center;
+  color: #094067;
+  font-weight: 700;
+  font-size: 24px;
+
   @media only screen and (min-width: 700px) {
     display: none;
   }
@@ -19,7 +27,7 @@ const MyHabits = () => {
       <DesktopContainer>
         <MyHabitsDesktop />
       </DesktopContainer>
-      <MobileConatainer>Mobile</MobileConatainer>
+      <MobileContainer>Mobile View Coming Soon!</MobileContainer>
     </>
   );
 };

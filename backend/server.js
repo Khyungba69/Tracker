@@ -4,6 +4,11 @@ const app = express();
 
 app.use(express.json());
 
+app.post("/user/register", (req, res) => {
+  const user = { name: "Nabin" };
+  res.send(user);
+});
+
 // endpoint
 app.get("/goals", (req, res) => {
   try {
