@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../UserSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const PageContainer = styled.div`
   padding-top: 20px;
@@ -68,6 +68,7 @@ const InputSection = styled.div`
   label {
     margin-bottom: 8px;
     font-weight: 700;
+    color: #fffffe;
 
     @media (max-width: 480px) {
       font-size: 14px; /* Adjust label font size for mobile devices */
@@ -149,6 +150,12 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const ErrorSection = styled.div`
+  color: #ef4565;
+  font-size: 14px;
+  margin-bottom: 5px;
+`;
+
 const Register = () => {
   const [userInfo, setUserInfo] = useState({
     firstName: "",
@@ -158,13 +165,16 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  const userState = useSelector((state) => state.user);
+  const { error } = userState.registerState || {}; // Ensure error is not undefined
+  const { loggedInUser } = userState;
+
   const handleUserInfoChange = (e) => {
     const { id, value } = e.target;
     setUserInfo((currentState) => ({
       ...currentState,
       [id]: value,
     }));
-    console.log(userInfo);
   };
 
   const dispatch = useDispatch();
@@ -173,14 +183,34 @@ const Register = () => {
     dispatch(registerUser(userInfo));
   };
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loggedInUser) {
+      // redirect
+      navigate("/habits");
+    }
+  }, [loggedInUser, navigate]);
+
+  const findError = (fieldName) => {
+    if (!error || !Array.isArray(error)) {
+      return null;
+    }
+    const errorObj = error.find((err) => err.path === fieldName);
+    return errorObj ? errorObj.msg : null;
+  };
+
   return (
     <PageContainer>
-      <PageTitle>Consistency</PageTitle>
+      <PageTitle>Daily Goals</PageTitle>
       <RegisterContainer>
         <FormTitle>Register</FormTitle>
         <FormContainer>
           <InputSection>
             <label htmlFor="firstName">First Name</label>
+            {findError("firstName") && (
+              <ErrorSection>{findError("firstName")}</ErrorSection>
+            )}
             <input
               type="text"
               id="firstName"
@@ -192,6 +222,9 @@ const Register = () => {
 
           <InputSection>
             <label htmlFor="lastName">Last Name</label>
+            {findError("lastName") && (
+              <ErrorSection>{findError("lastName")}</ErrorSection>
+            )}
             <input
               type="text"
               id="lastName"
@@ -203,31 +236,42 @@ const Register = () => {
 
           <InputSection>
             <label htmlFor="email">Email</label>
+            {findError("email") && (
+              <ErrorSection>{findError("email")}</ErrorSection>
+            )}
             <input
               type="email"
               id="email"
               placeholder="Email"
-              maxLength="50"
+              maxLength="100"
               onChange={handleUserInfoChange}
             />
           </InputSection>
 
           <InputSection>
             <label htmlFor="password">Password</label>
+            {findError("password") && (
+              <ErrorSection>{findError("password")}</ErrorSection>
+            )}
             <input
               type="password"
               id="password"
               placeholder="Password"
+              maxLength="128"
               onChange={handleUserInfoChange}
             />
           </InputSection>
 
           <InputSection>
             <label htmlFor="confirmPassword">Confirm Password</label>
+            {findError("confirmPassword") && (
+              <ErrorSection>{findError("confirmPassword")}</ErrorSection>
+            )}
             <input
               type="password"
               id="confirmPassword"
               placeholder="Confirm Password"
+              maxLength="100"
               onChange={handleUserInfoChange}
             />
           </InputSection>

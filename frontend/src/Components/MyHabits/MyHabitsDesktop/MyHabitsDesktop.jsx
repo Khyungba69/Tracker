@@ -82,7 +82,7 @@ const MyHabitsDesktop = () => {
   return (
     <GridContainer>
       <NavContainer>
-        <Title>Consistency</Title>
+        <Title>Daily Goals</Title>
         <Goals />
       </NavContainer>
       <MainContainer>
