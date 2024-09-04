@@ -205,6 +205,10 @@ const Register = () => {
       <PageTitle>Daily Goals</PageTitle>
       <RegisterContainer>
         <FormTitle>Register</FormTitle>
+
+        {findError("registrationError") && (
+          <ErrorSection>{findError("registrationError")}</ErrorSection>
+        )}
         <FormContainer>
           <InputSection>
             <label htmlFor="firstName">First Name</label>
