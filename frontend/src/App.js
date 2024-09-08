@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Welcome from "./Components/Welcome";
 import MyHabits from "Components/MyHabits";
 import Register from "Components/User/Register";
+import Signin from "Components/User/Signin/Signin";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" Component={Welcome} exact={true} />
         <Route path="/habits" Component={MyHabits} exact={true} />
         <Route path="/register" Component={Register} exact={true} />
+        <Route path="/signin" Component={Signin} exact={true} />
       </Routes>
     </BrowserRouter>
   );
