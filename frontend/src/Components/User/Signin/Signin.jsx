@@ -242,6 +242,9 @@ const Signin = () => {
       <PageTitle>Daily Goals</PageTitle>
       <SigninContainer>
         <FormTitle>Signin</FormTitle>
+        {findError("userNotFound") && (
+          <ErrorSection>{findError("userNotFoundl")}</ErrorSection>
+        )}
         <FormContainer>
           <InputSection>
             <label htmlFor="email">Email</label>
