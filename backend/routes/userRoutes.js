@@ -87,4 +87,11 @@ router.post("/register", userInfoValidation("register"), async (req, res) => {
   res.send(newUser);
 });
 
+router.post("/signin", (req, res) => {
+  const testUser = {
+    name: "nabin",
+  };
+  res.send(testUser);
+});
+
 export default router;
