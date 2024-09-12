@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { signinUser } from "../UserSlice";
+import { resetSigninState, signinUser } from "../UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const PageContainer = styled.div`
@@ -14,11 +14,11 @@ const PageContainer = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    padding: 0 15px; /* Adjust padding for tablets */
+    padding: 0 15px;
   }
 
   @media (max-width: 480px) {
-    padding: 0 10px; /* Adjust padding for mobile */
+    padding: 0 10px;
   }
 `;
 
@@ -31,11 +31,11 @@ const PageTitle = styled.h1`
   letter-spacing: 1px;
 
   @media (max-width: 768px) {
-    font-size: 34px; /* Adjust title font size for tablets */
+    font-size: 34px;
   }
 
   @media (max-width: 480px) {
-    font-size: 30px; /* Adjust title font size for mobile */
+    font-size: 30px;
   }
 `;
 
@@ -56,12 +56,12 @@ const SigninContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 30px;
-    max-width: 90%; /* Adjust width for tablets */
+    max-width: 90%;
   }
 
   @media (max-width: 480px) {
     padding: 25px;
-    max-width: 100%; /* Adjust width for mobile devices */
+    max-width: 100%;
   }
 `;
 
@@ -72,11 +72,11 @@ const FormTitle = styled.h2`
   font-weight: 800;
 
   @media (max-width: 768px) {
-    font-size: 28px; /* Adjust form title size for tablets */
+    font-size: 28px;
   }
 
   @media (max-width: 480px) {
-    font-size: 24px; /* Adjust form title size for mobile */
+    font-size: 24px;
   }
 `;
 
@@ -96,7 +96,7 @@ const InputSection = styled.div`
     color: #fffffe;
 
     @media (max-width: 480px) {
-      font-size: 14px; /* Adjust label font size for mobile */
+      font-size: 14px;
     }
   }
 
@@ -120,11 +120,11 @@ const InputSection = styled.div`
     }
 
     @media (max-width: 768px) {
-      padding: 10px; /* Adjust input padding for tablets */
+      padding: 10px;
     }
 
     @media (max-width: 480px) {
-      padding: 8px; /* Adjust input padding for mobile */
+      padding: 8px;
     }
   }
 `;
@@ -162,13 +162,13 @@ const SubmitButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    padding: 12px 18px; /* Adjust button padding for tablets */
-    font-size: 16px; /* Adjust button font size for tablets */
+    padding: 12px 18px;
+    font-size: 16px;
   }
 
   @media (max-width: 480px) {
-    padding: 10px 16px; /* Adjust button padding for mobile */
-    font-size: 14px; /* Adjust button font size for mobile */
+    padding: 10px 16px;
+    font-size: 14px;
   }
 `;
 
@@ -182,7 +182,7 @@ const StyledLink = styled(Link)`
   }
 
   @media (max-width: 480px) {
-    font-size: 14px; /* Adjust link font size for mobile */
+    font-size: 14px;
   }
 `;
 
@@ -192,7 +192,7 @@ const ErrorSection = styled.div`
   margin-bottom: 10px;
 
   @media (max-width: 480px) {
-    font-size: 12px; /* Adjust error font size for mobile */
+    font-size: 12px;
   }
 `;
 
@@ -203,7 +203,7 @@ const Signin = () => {
   });
 
   const userState = useSelector((state) => state.user);
-  const { error } = userState.signinState || {}; // Ensure error is not undefined
+  const { error } = userState.signinState || {};
   const { loggedInUser } = userState;
 
   const handleUserInfoChange = (e) => {
@@ -224,17 +224,25 @@ const Signin = () => {
 
   useEffect(() => {
     if (loggedInUser) {
-      // redirect
       navigate("/habits");
     }
   }, [loggedInUser, navigate]);
+
+  // Debugging log to check error
+  console.log("Error in signinState:", error);
 
   const findError = (fieldName) => {
     if (!error || !Array.isArray(error)) {
       return null;
     }
-    const errorObj = error.find((err) => err.path === fieldName);
+    const errorObj = error.find(
+      (err) => err.path === fieldName || err.param === fieldName
+    );
     return errorObj ? errorObj.msg : null;
+  };
+
+  const handleResetState = () => {
+    dispatch(resetSigninState());
   };
 
   return (
@@ -243,7 +251,7 @@ const Signin = () => {
       <SigninContainer>
         <FormTitle>Signin</FormTitle>
         {findError("userNotFound") && (
-          <ErrorSection>{findError("userNotFoundl")}</ErrorSection>
+          <ErrorSection>{findError("userNotFound")}</ErrorSection>
         )}
         <FormContainer>
           <InputSection>
@@ -282,7 +290,9 @@ const Signin = () => {
         </FormContainer>
         <div>
           Don't have an account?{" "}
-          <StyledLink to="/register">Register Here</StyledLink>
+          <StyledLink to="/register" onClick={handleResetState}>
+            Register Here
+          </StyledLink>
         </div>
       </SigninContainer>
     </PageContainer>

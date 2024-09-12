@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../UserSlice";
+import { registerUser, resetRegisterState } from "../UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const PageContainer = styled.div`
@@ -196,8 +196,14 @@ const Register = () => {
     if (!error || !Array.isArray(error)) {
       return null;
     }
-    const errorObj = error.find((err) => err.path === fieldName);
+    const errorObj = error.find(
+      (err) => err.path === fieldName || err.param === fieldName
+    );
     return errorObj ? errorObj.msg : null;
+  };
+
+  const handleResetState = () => {
+    dispatch(resetRegisterState());
   };
 
   return (
@@ -287,7 +293,9 @@ const Register = () => {
         </FormContainer>
         <div>
           Already have an account?{" "}
-          <StyledLink to="/signin">Login Here</StyledLink>
+          <StyledLink to="/signin" onClick={handleResetState}>
+            Login Here
+          </StyledLink>
         </div>
       </RegisterContainer>
     </PageContainer>
